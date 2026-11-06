@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClipFlow · clipes da sua live em um atalho</title>
+<meta name="description" content="Aperte um atalho durante a live e o ClipFlow entrega um vídeo vertical pronto para TikTok, Reels e Shorts: seu rosto em cima, o jogo embaixo, legenda e título.">
+<meta property="og:title" content="ClipFlow: clipes da sua live em um atalho">
+<meta property="og:description" content="Seu rosto em cima, o jogo embaixo, legenda e título. Pronto para TikTok, Reels e Shorts.">
+<meta property="og:image" content="/poster.jpg">
+<meta name="theme-color" content="#1a1030">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23a855f7'/%3E%3Ccircle cx='32' cy='32' r='12' fill='%23ff4d5e'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;700&family=Poppins:wght@800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1030;        /* violet night, the page */
+    --ink-2: #24173f;      /* raised surfaces */
+    --line: #3a2a5e;
+    --paper: #f1ecfa;      /* text + keycap faces */
+    --muted: #b6a9d1;
+    --violet: #a855f7;     /* ClipFlow's caption accent */
+    --yellow: #ffd84a;     /* caption highlight in the clips */
+    --rec: #ff4d5e;        /* OBS "recording" red */
+    --display: "Poppins", system-ui, sans-serif;
+    --body: "Figtree", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    overflow-x: hidden;
+    margin: 0; background: var(--ink); color: var(--paper);
+    font: 400 1.0625rem/1.6 var(--body);
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 6px; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+  /* ---------- header ---------- */
+  header { padding: 22px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; font: 900 1.25rem/1 var(--display); text-decoration: none; }
+  .brand i { width: 14px; height: 14px; border-radius: 50%; background: var(--rec); box-shadow: 0 0 0 4px rgba(255,77,94,.22); }
+  header nav a { color: var(--muted); text-decoration: none; font-weight: 500; }
+  header nav a:hover { color: var(--paper); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 40px 0 88px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
+  h1 {
+    font: 900 clamp(2.6rem, 6.2vw, 4.75rem)/1.02 var(--display); letter-spacing: -.02em;
+    margin: 0 0 28px; max-width: 12ch; text-wrap: balance;
+  }
+  .lede { font-size: 1.2rem; color: var(--muted); max-width: 46ch; margin: 0 0 32px; }
+  .lede strong { color: var(--paper); font-weight: 700; }
+
+  .keys { display: flex; align-items: center; gap: 12px; margin: 0 0 36px; flex-wrap: wrap; }
+  .keys span { color: var(--muted); font: 800 1.4rem var(--display); }
+  kbd {
+    display: inline-grid; place-items: center; min-width: 74px; height: 70px; padding: 0 18px;
+    font: 800 1.15rem var(--display); color: var(--ink);
+    background: linear-gradient(#fbf9ff, #ddd3ef); border-radius: 12px;
+    box-shadow: 0 7px 0 #8f7fb3, 0 9px 18px rgba(0,0,0,.45), inset 0 -2px 0 rgba(0,0,0,.08);
+    transform: translateY(0); transition: transform .08s, box-shadow .08s;
+  }
+  kbd.c { background: linear-gradient(#ffe683, var(--yellow)); box-shadow: 0 7px 0 #b8901a, 0 9px 18px rgba(0,0,0,.45); }
+  .keys.press kbd { transform: translateY(5px); box-shadow: 0 2px 0 #8f7fb3, 0 3px 8px rgba(0,0,0,.4); }
+  .keys.press kbd.c { box-shadow: 0 2px 0 #b8901a, 0 3px 8px rgba(0,0,0,.4); }
+
+  .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 12px; padding: 16px 26px; border-radius: 14px;
+    background: var(--violet); color: #fff; font: 800 1.1rem var(--display); text-decoration: none;
+    box-shadow: 0 10px 30px rgba(168,85,247,.35);
+  }
+  .btn:hover { background: #b46cf8; }
+  .btn svg { width: 22px; height: 22px; }
+  .fine { color: var(--muted); font-size: .95rem; line-height: 1.45; }
+
+  /* phone */
+  .phone-col { display: flex; justify-content: center; position: relative; }
+  .phone {
+    position: relative; width: min(300px, 78vw); aspect-ratio: 9 / 19.5; border-radius: 42px; padding: 12px;
+    background: #0c0718; box-shadow: 0 0 0 2px var(--line), 0 40px 80px rgba(0,0,0,.55);
+  }
+  .phone video { width: 100%; height: 100%; object-fit: cover; border-radius: 30px; display: block; background: #000; }
+  .rec {
+    position: absolute; top: 28px; left: 28px; display: flex; align-items: center; gap: 7px;
+    padding: 5px 10px 5px 8px; border-radius: 99px; background: rgba(12,7,24,.75);
+    font: 700 .8rem var(--body); letter-spacing: .02em;
+  }
+  .rec::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--rec); animation: blink 1.4s infinite; }
+  @keyframes blink { 50% { opacity: .25; } }
+
+  /* ---------- sections ---------- */
+  section { padding: 88px 0; border-top: 1px solid var(--line); }
+  h2 { font: 900 clamp(1.9rem, 3.6vw, 2.75rem)/1.1 var(--display); letter-spacing: -.015em; margin: 0 0 14px; max-width: 20ch; }
+  .intro { color: var(--muted); max-width: 56ch; margin: 0 0 48px; }
+
+  ol.steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; counter-reset: s; }
+  ol.steps li { counter-increment: s; }
+  ol.steps li::before {
+    content: counter(s); display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 18px;
+    border-radius: 50%; border: 2px solid var(--violet); color: var(--violet); font: 900 1.15rem var(--display);
+  }
+  ol.steps h3, .does dt { font: 800 1.25rem/1.3 var(--display); margin: 0 0 8px; }
+  ol.steps p, .does dd { margin: 0; color: var(--muted); max-width: 40ch; }
+
+  .does { display: grid; grid-template-columns: 1fr 1fr; gap: 36px 64px; margin: 0; }
+  .does div { padding-left: 18px; border-left: 3px solid var(--violet); }
+  .does div:nth-child(3n+2) { border-color: var(--yellow); }
+  .does div:nth-child(3n) { border-color: var(--rec); }
+  .does dd { margin: 0; }
+
+  .need { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .need ul { margin: 0; padding-left: 1.2em; color: var(--muted); }
+  .need li { margin-bottom: 10px; }
+  .need li strong { color: var(--paper); }
+  .note { background: var(--ink-2); border: 1px solid var(--line); border-radius: 16px; padding: 24px 26px; }
+  .note h3 { font: 800 1.15rem var(--display); margin: 0 0 10px; }
+  .note p { margin: 0 0 10px; color: var(--muted); }
+  .note p:last-child { margin: 0; }
+
+  details { border-bottom: 1px solid var(--line); padding: 18px 0; max-width: 760px; }
+  summary { cursor: pointer; font: 800 1.1rem var(--display); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--violet); font-size: 1.4rem; line-height: 1; transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { color: var(--muted); margin: 12px 0 0; max-width: 64ch; }
+
+  .final { text-align: center; }
+  .final h2 { margin-inline: auto; }
+  .final .cta { justify-content: center; margin-top: 28px; }
+  footer { padding: 32px 0 48px; color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
+
+  /* ---------- small screens ---------- */
+  @media (max-width: 860px) {
+    .hero { padding-top: 16px; }
+    .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 56px; }
+    ol.steps, .does, .need { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    section { padding: 64px 0; }
+    kbd { min-width: 60px; height: 58px; font-size: 1rem; padding: 0 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rec::before { animation: none; }
+    kbd { transition: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <a class="brand" href="#"><i aria-hidden="true"></i>ClipFlow</a>
+    <nav><a href="#como-funciona">Como funciona</a></nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Aperte o atalho. O clipe sai pronto.</h1>
+        <div class="keys" id="keys" aria-label="Atalho Ctrl + Shift + C">
+          <kbd>Ctrl</kbd><span aria-hidden="true">+</span><kbd>Shift</kbd><span aria-hidden="true">+</span><kbd class="c">C</kbd>
+        </div>
+        <p class="lede">Rolou algo bom na live? Aperte o atalho e continue jogando. O ClipFlow pega o último minuto do OBS e entrega
+          <strong>um vídeo vertical com seu rosto em cima, o jogo embaixo, legenda e título</strong>, pronto para TikTok, Reels e Shorts.</p>
+        <div class="cta">
+          <a class="btn download" href="#">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0 5-5m-5 5-5-5M5 20h14"/></svg>
+            Baixar para Windows
+          </a>
+          <span class="fine">Grátis durante o teste.<br>Windows 10 ou 11, com OBS Studio.</span>
+        </div>
+      </div>
+      <div class="phone-col">
+        <div class="phone">
+          <video src="demo.mp4" poster="poster.jpg" autoplay muted loop playsinline aria-label="Exemplo de clipe feito pelo ClipFlow: rosto do streamer em cima e partida de League of Legends embaixo"></video>
+          <span class="rec">Clipe da live</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="como-funciona">
+    <div class="wrap">
+      <h2>Do lance ao post em três passos</h2>
+      <p class="intro">Você não precisa parar a live nem abrir editor de vídeo.</p>
+      <ol class="steps">
+        <li><h3>Aperte o atalho</h3><p>Fez a jogada, deu risada, o chat explodiu? Aperte Ctrl + Shift + C. O OBS guarda o último minuto e o ClipFlow pega ele.</p></li>
+        <li><h3>Ele edita sozinho</h3><p>Enquanto você joga, o ClipFlow monta o vídeo vertical, escolhe o momento principal, escreve a legenda e o título.</p></li>
+        <li><h3>Arraste e poste</h3><p>Depois da live, abra o ClipFlow, clique na rede social e arraste o vídeo para a página. A legenda já vai copiada.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>O que ele faz por você</h2>
+      <p class="intro">Tudo isso acontece em cada clipe, sem você configurar nada.</p>
+      <dl class="does">
+        <div><dt>Rosto sempre no quadro</dt><dd>Encontra sua câmera na cena do OBS e acompanha seu rosto, mesmo quando você se mexe.</dd></div>
+        <div><dt>Só o que importa</dt><dd>Acha o momento mais alto do clipe, como o grito ou a risada, e corta em volta dele sem cortar a luta.</dd></div>
+        <div><dt>Legenda palavra por palavra</dt><dd>No estilo dos clipes que viralizam, com as palavras de impacto em destaque.</dd></div>
+        <div><dt>Título e hashtags</dt><dd>A IA olha o clipe e escreve um título que faz a pessoa parar de rolar o feed.</dd></div>
+        <div><dt>Som pronto para o celular</dt><dd>Volume ajustado no padrão do TikTok, Reels e Shorts, com efeito sonoro no lance principal.</dd></div>
+        <div><dt>Sem pesar a live</dt><dd>Edita um clipe por vez em segundo plano, deixando a placa de vídeo livre para o jogo e para a transmissão.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap need">
+      <div>
+        <h2>Antes de instalar</h2>
+        <ul>
+          <li><strong>Windows 10 ou 11.</strong> Ainda não tem versão para Mac nem para celular.</li>
+          <li><strong>OBS Studio</strong>, o programa que você já usa para fazer a live.</li>
+          <li><strong>Código de convite.</strong> O ClipFlow está em teste fechado: para criar a conta você precisa de um código.<span class="invite-ask"></span></li>
+          <li>Uns <strong>2 GB livres</strong> no disco para o programa e os primeiros clipes.</li>
+        </ul>
+      </div>
+      <div class="note">
+        <h3>Se o Windows mostrar um aviso azul</h3>
+        <p>Como o ClipFlow é novo, o Windows ainda não o conhece e pode mostrar "O Windows protegeu o computador".</p>
+        <p>Clique em <strong>Mais informações</strong> e depois em <strong>Executar assim mesmo</strong>. A instalação não pede senha de administrador.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Perguntas frequentes</h2>
+      <details><summary>Funciona com qualquer jogo?</summary><p>Sim. O ClipFlow grava o que o OBS grava, então funciona com qualquer jogo, e também quando você está reagindo a vídeos ou conversando com o chat.</p></details>
+      <details><summary>Ele posta sozinho nas minhas redes?</summary><p>Ainda não. Você revisa o clipe e posta com dois cliques: o ClipFlow abre o site, copia a legenda e mostra o vídeo para você arrastar. Assim nada sai sem você ver antes.</p></details>
+      <details><summary>Deixa a live mais pesada?</summary><p>A edição roda depois que o clipe é salvo, um por vez, e a transcrição usa o processador, não a placa de vídeo. Em PCs de live comuns não dá para perceber.</p></details>
+      <details><summary>Preciso mudar minha cena do OBS?</summary><p>Não. O ClipFlow lê onde estão sua câmera e o jogo na cena e liga sozinho o buffer de repetição. A página Primeiros passos do app confere tudo para você.</p></details>
+      <details><summary>Quanto custa?</summary><p>Durante o teste é grátis: 30 dias e até 300 clipes por conta.</p></details>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Seu próximo lance já pode virar clipe</h2>
+      <div class="cta">
+        <a class="btn download" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0 5-5m-5 5-5-5M5 20h14"/></svg>
+          Baixar para Windows
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">ClipFlow. Feito no Brasil para streamers.</div>
+</footer>
+
+<script>
+  // ---- edit here ----
+  const DOWNLOAD_URL = "https://github.com/painkag/clipflow/releases/latest/download/ClipFlow-Setup.exe";
+  const INVITE_URL = ""; // e.g. https://wa.me/55DDDNUMERO or an Instagram link; empty = hidden
+  // -------------------
+  document.querySelectorAll("a.download").forEach((a) => (a.href = DOWNLOAD_URL));
+  if (INVITE_URL) {
+    const el = document.querySelector(".invite-ask");
+    el.innerHTML = ' <a href="' + INVITE_URL + '" target="_blank" rel="noopener">Pedir um código</a>.';
+  }
+  // On phones the installer can't run: say so instead of downloading a file that "does nothing".
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    document.querySelectorAll("a.download").forEach((a) => {
+      a.removeAttribute("href");
+      a.setAttribute("aria-disabled", "true");
+      a.lastChild.textContent = " Abra este site no computador";
+    });
+    document.querySelectorAll(".fine").forEach((f) => (f.textContent = "O ClipFlow roda no PC da live (Windows). Mande este link para você mesmo e abra no computador."));
+  }
+  // The one bit of motion: the hotkey gets pressed, like in a live.
+  const keys = document.getElementById("keys");
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const press = () => { keys.classList.add("press"); setTimeout(() => keys.classList.remove("press"), 220); };
+    setTimeout(press, 900);
+    setInterval(press, 9000);
+  }
+</script>
+</body>
+</html>
